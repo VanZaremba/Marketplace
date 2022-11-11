@@ -1,6 +1,6 @@
-# Getting Started with Create React App
+# Marketplace 
+Basic MVP functionality for a marketplace. User should be able to navigate between home page, product page and cart page, add multiple items to the cart and see the total amount for payment.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
 
