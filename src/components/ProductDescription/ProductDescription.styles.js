@@ -80,9 +80,9 @@ export const AttributeValue = styled.input``;
 export const Radio = styled.div`
   border: 1px solid #ccc;
   box-sizing: border-box;
-  height: 45px;
   position: relative;
-  width: 63px;
+  width: ${(props) => (!props.miniCart ? "63px" : "24px")};
+  height: ${(props) => (!props.miniCart ? "45px" : "24px")};
   margin-right: 12px;
   border: 1px solid #1d1f22;
   display: inline-block;
@@ -90,7 +90,7 @@ export const Radio = styled.div`
   label span {
     z-index: 1;
     font-weight: 400;
-    font-size: 16px;
+    font-size: ${(props) => (!props.miniCart ? "16px" : "9px")};
     font-family: "Source Sans Pro";
     letter-spacing: 0.05em;
   }
@@ -130,9 +130,9 @@ export const Radio = styled.div`
 export const RadioColor = styled.div`
   border: 1px solid #ccc;
   box-sizing: border-box;
-  height: 32px;
   position: relative;
-  width: 32px;
+  width: ${(props) => (!props.miniCart ? "32px" : "16px")};
+  height: ${(props) => (!props.miniCart ? "32px" : "16px")};
   margin-right: 12px;
   display: inline-block;
   border: none;
@@ -185,12 +185,10 @@ export const Button = styled.button`
   border: none;
   cursor: pointer;
   margin-bottom: 40px;
-
   width: 292px;
   height: 52px;
   color: white;
-
-  background: #5ece7b;
+  background: var(--actionButtons);
   font-weight: 600;
   font-size: 16px;
 `;
@@ -211,4 +209,14 @@ export const ProductInfoContainer = styled.div`
     width: 100%;
     margin: 20px;
   }
+`;
+
+export const Error = styled.div`
+  font-weight: 600;
+  font-size: 15px;
+  padding: 20px;
+  border-radius: 3px;
+  margin: 10px 80px 10px 0px;
+  color: #fff;
+  background-color: #ed5565;
 `;

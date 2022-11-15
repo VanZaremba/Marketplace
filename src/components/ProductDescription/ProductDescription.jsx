@@ -1,10 +1,9 @@
 import React, { Component } from "react"
 import { withRouter } from "react-router";
-import {gql } from '@apollo/client';
-import {Query} from "@apollo/client/react/components"
+import { gql } from '@apollo/client';
+import { Query } from "@apollo/client/react/components"
 import { connect } from "react-redux";
-import { addProductToCart } from "../../store/cart/cartActions";
-import { setProductAttributes } from "../../store/cart/cartActions";
+import { addProductToCart, increaseProductQuantity } from "../../store/cart/cartActions";
 import { 
   Container, 
   ProductImgContainer, 
@@ -21,8 +20,9 @@ import {
   Radio,
   Button,
   Img,
-  RadioColor
- } from "./ProductDescriptionStyles";
+  RadioColor,
+  Error
+ } from "./ProductDescription.styles";
 
 const GET_PRODUCT_DESCRIPTION = gql`
   query product($id: String!){
@@ -58,7 +58,6 @@ const GET_PRODUCT_DESCRIPTION = gql`
 class ProductDescription extends Component {
   constructor(props){
     super()
-
     this.state = {
       imgClicked: false,
       image: '',
@@ -67,6 +66,7 @@ class ProductDescription extends Component {
     }
     this.handleImageClick = this.handleImageClick.bind(this);
     this.handleAttributes = this.handleAttributes.bind(this);
+    this.handleAddProductsToCart = this.handleAddProductsToCart.bind(this);
   }
 
   handleImageClick(item){
@@ -79,16 +79,29 @@ class ProductDescription extends Component {
       productID: productID,
       id: id,
       value: value,
+      error: ''
     };
-      if(this.state.attributes.length > 0){
+      if (this.state.attributes.length > 0){
         const element = this.state.attributes.find(attribute => attribute.id === id)
-          if(element){
-            element.value = value
-          }else{
-            this.state.attributes.push(attribute);
-          }
-      }else{
+          element ? element.value = value : this.state.attributes.push(attribute);
+      } else {
         this.state.attributes.push(attribute);
+      }
+    }
+
+    handleAddProductsToCart(product){
+      if(product.attributes.length > 0 && this.state.attributes.length !== product.attributes.length ){
+        this.setState({error: '*Please, select an attribute before add the product to the cart'})
+      } else {
+        this.setState({error: ''})
+        this.props.addProductToCart(
+          product.id, 
+          product.prices, 
+          product.attributes, 
+          this.state.attributes, 
+          product.name, 
+          product.brand, 
+          product.gallery )
       }
     }
   
@@ -99,7 +112,7 @@ class ProductDescription extends Component {
             if (error) return <h1>Error...</h1>;
             if (loading) return <h1>Loading...</h1>;
             const { product } = data
-            return <>
+            return <React.Fragment>
               <ProductImgContainer>
                 <ImgCarousel>
                   {product.gallery.map((item, index) => 
@@ -110,12 +123,14 @@ class ProductDescription extends Component {
               </ProductImgContainer>
               <ProductInfoContainer>
                 <ProductBrand>
-                <span>{this.props.catItems}</span>
                   {product.brand}
-                </ProductBrand><br/>
+                </ProductBrand>
+                <br/>
                 <ProductName>
                   {product.name}
-                </ProductName><br/>
+                </ProductName>
+                <br/>
+                {this.state.error && <Error>{this.state.error}</Error>}
                 {product.attributes.map((attribute, index) => 
                   <div key={index}>
                     <AttributeName key={index}>
@@ -164,20 +179,17 @@ class ProductDescription extends Component {
                     <ProductPrice key={index}>{item.currency.symbol}{item.amount} </ProductPrice> : '' 
                   )}
                 <br/>
-                <Button onClick={() => this.props.addProductToCart(
-                  product.id, 
-                  product.prices, 
-                  product.attributes, 
-                  this.state.attributes, 
-                  product.name, 
-                  product.brand)}>ADD TO CART</Button><br/>
+                <Button onClick={() => this.handleAddProductsToCart(product)}>
+                  ADD TO CART
+                </Button>
+                <br/>
                 <DescriptionProduct dangerouslySetInnerHTML={{
                     __html: `<h4>${product.description}</h4>`
                   }}
                 /> 
                 <br/>
               </ProductInfoContainer>
-            </>
+            </React.Fragment>
           }}
       </Query>
     </Container>
@@ -185,7 +197,6 @@ class ProductDescription extends Component {
 }
 
 const mapStateToProps = state => {
-  console.log(state)
   return {
     categoryName: state.categoryReducer.categoryName,
     currencyLabel: state.currencyReducer.currencyLabel,
@@ -199,15 +210,17 @@ const mapDispatchToProps = dispatch => {
       allAttributes, 
       chosenAttributes,
       name, 
-      brand
+      brand,
+      gallery
     ) => dispatch(addProductToCart(id,
       prices, 
       allAttributes,
       chosenAttributes, 
       name, 
       brand,
+      gallery
       )),
-    setProductAttributes: (productID, id, value)  => dispatch(setProductAttributes(productID, id, value))
+      increaseProductQuantity: (id) => dispatch(increaseProductQuantity(id))
   }
 }
 

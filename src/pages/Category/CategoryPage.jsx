@@ -1,6 +1,6 @@
 import React, { Component } from "react"
 import Products from "../../components/Products/Products";
-import { WrapperContainer, CategoryTitle } from "../../components/Products/ProducstStyles";
+import { WrapperContainer, CategoryTitle } from "../../components/Products/Products.styles";
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 

@@ -14,29 +14,29 @@ export const Title = styled.div`
 export const ProductBrand = styled.div`
   font-family: "Raleway";
   font-style: normal;
-  font-weight: 600;
-  font-size: 30px;
+  font-weight: ${(props) => (!props.miniCart ? "600" : "300")};
+  font-size: ${(props) => (!props.miniCart ? "30px" : "16px")};
 `;
 
 export const ProductName = styled.div`
   font-family: "Raleway";
   font-style: normal;
   font-weight: 400;
-  font-size: 30px;
+  font-size: ${(props) => (!props.miniCart ? "30px" : "16px")};
 `;
 
 export const ProductPrice = styled.div`
   font-family: "Raleway";
   font-style: normal;
   font-weight: 700;
-  font-size: 24px;
+  font-size: ${(props) => (!props.miniCart ? "24px" : "16px")};
 `;
 
 export const Container = styled.div`
   margin: 0 100px;
 
   @media (max-width: 700px) {
-    margin: 20px;
+    margin: 0 20px;
   }
 `;
 
@@ -44,46 +44,76 @@ export const InfoRow = styled.div`
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
-  padding: 24px 0;
+  margin: 24px 0;
+  max-height: ${(props) => (!props.miniCart ? "400px" : "290px")};
+  height: auto;
 
   @media screen and (max-width: 768px) {
     padding-bottom: 30px;
+    max-height: 700px;
   }
 `;
 
 export const InfoColumn = styled.div`
   flex: 1;
   max-width: 70%;
-  max-height: 336px;
-  flex-basis: 70%;
 
   @media screen and (max-width: 768px) {
     max-width: 100%;
     flex-basis: 100%;
-    display: flex;
     justify-content: center;
   }
 `;
 
 export const SummaryColumn = styled.div`
-  max-width: 10%;
-  flex-basis: 10%;
   align-items: center;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  margin-bottom: 20px;
 
   @media screen and (max-width: 768px) {
     max-width: 100%;
     flex-basis: 100%;
     flex-direction: row;
+    padding-top: 20px;
   }
 `;
 
 export const CarouselColumn = styled.div`
-  max-width: 20%;
-  flex-basis: 20%;
-  background-color: pink;
+  max-width: ${(props) => (!props.miniCart ? "20%" : "100%")};
+  flex-basis: ${(props) => (!props.miniCart ? "20%" : "40%")};
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row-reverse;
+  justify-content: flex-start;
+
+  @media screen and (max-width: 768px) {
+    max-width: 100%;
+    flex-basis: 100%;
+    justify-content: center;
+    margin-top: 20px;
+  }
+`;
+
+export const CarouselArrows = styled.div`
+  height: 24px;
+  width: 60px;
+  display: flex;
+  justify-content: space-between;
+  color: white;
+  text-align: center;
+  align-items: center;
+`;
+
+export const Left = styled.div`
+  height: 24px;
+  width: 24px;
+  background-color: rgba(0, 0, 0, 0.73);
+  justify-content: center;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
 
   @media screen and (max-width: 768px) {
     max-width: 100%;
@@ -92,16 +122,30 @@ export const CarouselColumn = styled.div`
   }
 `;
 
-export const CarouselImage = styled.div`
-  width: 200px;
-  height: 288px;
-  margin-left: 24px;
+export const Right = styled.div`
+  height: 24px;
+  width: 24px;
+  background-color: rgba(0, 0, 0, 0.73);
+  justify-content: center;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
 
   @media screen and (max-width: 768px) {
     max-width: 100%;
     flex-basis: 100%;
     justify-content: center;
   }
+`;
+
+export const Img = styled.img`
+  width: 100%;
+  height: 280px;
+  margin-bottom: 30px;
+  background-image: url(${(props) => props.img});
+  background-repeat: no-repeat;
+  cursor: pointer;
+  object-fit: contain;
 `;
 
 export const BoxQuantity = styled.div`
@@ -110,10 +154,10 @@ export const BoxQuantity = styled.div`
   align-items: center;
   justify-content: center;
   display: flex;
-  width: 45px;
-  height: 45px;
+  width: ${(props) => (!props.miniCart ? "45px" : "24px")};
+  height: ${(props) => (!props.miniCart ? "45px" : "24px")};
   cursor: pointer;
-  font-size: 50px;
+  font-size: ${(props) => (!props.miniCart ? "50px" : "25px")};
   font-weight: 300;
 `;
 
@@ -121,32 +165,7 @@ export const AttributeName = styled.h2`
   font-family: "Roboto Condensed";
   text-transform: uppercase;
   font-style: normal;
-  font-weight: 700;
-  font-size: 18px;
+  font-weight: ${(props) => (!props.miniCart ? "700" : "400")};
+  font-size: ${(props) => (!props.miniCart ? "18px" : "14px")};
   margin-bottom: 10px;
-`;
-
-export const AttributeValue = styled.div`
-  width: 63px;
-  height: 45px;
-  border: 1px solid #1d1f22;
-  display: inline-block;
-  font-weight: 400;
-  font-size: 16px;
-  font-family: "Source Sans Pro";
-  font-style: normal;
-  margin-right: 12px;
-  margin-bottom: 24px;
-  cursor: pointer;
-  letter-spacing: 0.05em;
-  text-align: center;
-`;
-
-export const AttributeColor = styled.h2`
-  width: 32px;
-  height: 32px;
-  background-color: ${(props) => props.color};
-  display: inline-block;
-  margin-right: 10px;
-  cursor: pointer;
 `;

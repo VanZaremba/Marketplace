@@ -14,9 +14,7 @@ import {
   OpenLinksButton,
   NavBarLinkExtended,
   NavBarExtendedContainer,
-  NavbarMenu,
-  NavBarInnerContainer
-} from './NavbarStyles'
+} from './Navbar.styles'
 import {gql } from '@apollo/client';
 import {Query} from "@apollo/client/react/components"
 import { connect } from "react-redux";
@@ -116,51 +114,47 @@ class Navbar extends Component {
         }}
       </Query>
     </NavbarCategoriesMenu>
-
     <NavbarLogo>
       <img alt="logo" src={logo}/>
     </NavbarLogo>
-
     <NavbarCartMenu>
-        <Query query={GET_CURRENCIES}>
-          {({ loading, error, data }) => {
-            if (error) return null;
-            if (loading) return null;
-            const { currencies } = data
-            return <>
-            <b>
+      <Query query={GET_CURRENCIES}>
+        {({ loading, error, data }) => {
+          if (error) return null;
+          if (loading) return null;
+          const { currencies } = data
+          return <>
+          <b>
+            {currencies.map((item, index) => 
+              item.label === this.props.currencyLabel ? <span key={index}>{item.symbol}</span> : ''
+            )}
+          </b>
+          <ArrowIcon ref={this.box} onClick={() => this.handleArrowChange()}>
+            <img alt="logo" src={this.state.arrowDown ? arrowDown : arrowUp}/>
+          </ArrowIcon>
+          <CurrencyContainer show={this.state.arrowDown}>
+            <CurrencySelect>
               {currencies.map((item, index) => 
-                item.label === this.props.currencyLabel ? <span key={index}>{item.symbol}</span> : ''
+                <Currency key={index} onClick={() => { this.handleCurrencyChange(item.label, item.symbol); this.handleArrowChange()}}>
+                  {item.symbol}{' '}{item.label}
+                </Currency>
               )}
-            </b>
-            <ArrowIcon ref={this.box} onClick={() => this.handleArrowChange()}>
-              <img alt="logo" src={this.state.arrowDown ? arrowDown : arrowUp}/>
-            </ArrowIcon>
-            <CurrencyContainer show={this.state.arrowDown}>
-              <CurrencySelect>
-                {currencies.map((item, index) => 
-                  <Currency key={index} onClick={() => { this.handleCurrencyChange(item.label, item.symbol); this.handleArrowChange()}}>
-                    {item.symbol}{' '}{item.label}
-                  </Currency>
-                )}
-              </CurrencySelect>
-            </CurrencyContainer>
-          </>
-          }}
-        </Query>
+            </CurrencySelect>
+          </CurrencyContainer>
+        </>
+        }}
+      </Query>
         <Icon>
-          <BsCart2 onClick={this.handleCartClick, this.handleOpenModal}/>
+          <BsCart2 onClick={this.handleOpenModal}/>
           <MiniCart isOpen={this.state.isOpen} handleOpenModal={this.handleOpenModal}/>
-      
           {this.props.totalItems !== 0 &&
             <TotalItems>
               {this.props.totalItems}
             </TotalItems>
           }
-          </Icon>
+        </Icon>
       </NavbarCartMenu> 
-  
-    {this.state.extendedNavBar && (
+      {this.state.extendedNavBar && (
         <NavBarExtendedContainer>
           <Query query={GET_CATEGORIES}>
             {({ loading, error, data }) => {

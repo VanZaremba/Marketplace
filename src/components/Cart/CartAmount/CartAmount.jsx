@@ -3,7 +3,7 @@ import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import { addProductToCart } from "../../../store/cart/cartActions";
 import { decreaseProductQuantity } from "../../../store/cart/cartActions";
-
+import { Text, Button } from "./CartAmount.styles";
 
 class CartAmount extends Component {
   constructor(props){
@@ -24,14 +24,22 @@ class CartAmount extends Component {
         )
       }) 
     }
-
-    return<>
-      {array.length !== 0 ? <>Tax 21%: {(amount * (21/100)).toFixed(2)} <br/>
-        Quantity: {this.props.totalItems} <br/>
-        Total: {this.props.currencySymbol} {(amount + (amount * (21/100))).toFixed(2)}
-      </> 
-        : 'Nenhum produto add'}
-    </>
+    return<React.Fragment>
+      {array.length !== 0 ? <React.Fragment>
+        <hr/>
+        <Text>Tax 21%: <b>{(amount * (21/100)).toFixed(2)} </b>
+        <br/>
+        Quantity: <b>{this.props.totalItems}</b> 
+        <br/>
+        Total: <b>{this.props.currencySymbol} {(amount + (amount * (21/100))).toFixed(2)}
+        </b>
+        </Text> 
+      <Button>
+        Order
+      </Button>
+      </React.Fragment>
+        : 'No products yet'}
+    </React.Fragment>
   }
 }
 

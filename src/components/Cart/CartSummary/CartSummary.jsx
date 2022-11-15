@@ -3,170 +3,141 @@ import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import { 
   InfoColumn, 
-  Title, 
   InfoRow, 
-  AttributeColor, 
   AttributeName, 
   SummaryColumn,
   CarouselColumn,
-  Container,
   BoxQuantity,
-  CarouselImage,
   ProductBrand,
   ProductName,
   ProductPrice,
-} from "./CartSummaryStyles";
-import { gql } from '@apollo/client';
-import {Query} from "@apollo/client/react/components";
+  Img,
+  Right,
+  Left,
+  CarouselArrows
+} from "./CartSummary.styles";
 import { addProductToCart } from "../../../store/cart/cartActions";
-import { decreaseProductQuantity } from "../../../store/cart/cartActions";
-import { Radio, AttributeValue, RadioColor } from "../../ProductDescription/ProductDescriptionStyles";
-
-const GET_PRODUCT_DESCRIPTION = gql`
-  query product($id: String!){
-    product(id: $id) {
-      id
-      brand
-      name
-      prices{	
-        currency{
-          label
-          symbol
-        }
-        amount
-      }
-      inStock
-    	description
-      gallery
-    	attributes{
-        id
-        name
-        type
-        items{
-          displayValue
-          value
-          id
-        }
-			}
-    }
-  }
-`;
+import { decreaseProductQuantity, increaseProductQuantity } from "../../../store/cart/cartActions";
+import { Radio, AttributeValue, AttributeColor,  RadioColor } from "../../ProductDescription/ProductDescription.styles";
+import { BsChevronRight, BsChevronLeft } from 'react-icons/bs'
 
 class CartSummary extends Component {
   constructor(props){
     super()
     this.state = {
-      size: ''
+      size: '',
+      imageIndex: 0
     }
-    this.handleAttributes = this.handleAttributes.bind(this);
+    this.handleImageLeftClick = this.handleImageLeftClick.bind(this);
+    this.handleImageRightClick = this.handleImageRightClick.bind(this);
   }
 
-  handleAttributes(name, value){
-    console.log(name, value)
+  handleImageLeftClick(product){
+    if(product.gallery.length > 1){
+      if(this.state.imageIndex >= 1){
+        this.setState({ imageIndex: this.state.imageIndex - 1 })
+      }
+      if(this.state.imageIndex === 0 ){
+        this.setState({ imageIndex: 0 })
+      }
+    }
+  }
+
+  handleImageRightClick(product){
+    for (let i = 0; i < (product.gallery.length - this.state.imageIndex - 1) ; i++) {
+      this.setState({ imageIndex: this.state.imageIndex + 1 })
+    }
   }
 
   render(){
-    // let chosenAttributesID = 0
-    //   this.props.cartItems.map((item, index) => {
-    //   item.chosenAttributes.value.map((i) => i === 'Yes' ? console.log(i) : '')
-    //   chosenAttributesID = item.chosenAttributes.value.length
-    //   })
-// console.log(chosenAttributesID)
-
-
-    return <>
+    return <React.Fragment>
     {this.props.cartItems.map((product, index) => 
-
-    <>
-        <hr/>
-        <InfoRow>
-          <InfoColumn>
-            <ProductBrand>{product.brand}</ProductBrand><br/>
+    <React.Fragment key={index}>
+      <hr/>
+        <InfoRow key={index}>
+          <InfoColumn key={index}>
+            <ProductBrand miniCart={false}>{product.brand}</ProductBrand><br/>
             <ProductName>{product.name}</ProductName><br/>
-            {/* {product.prices.map((item, index) => 
+            {product.prices.map((item, index) => 
               item.currency.label === this.props.currencyLabel ? 
               <ProductPrice key={index}>{item.currency.symbol}{item.amount} </ProductPrice> : '' 
-            )} */}
+            )}
             <br/>
-            {/* {product.allAttributes.map((attribute, index) => 
-                  <div key={index}>
-                    <AttributeName key={index}>
-                      {attribute.name}
-                    </AttributeName>
+            {product.allAttributes.map((attribute, index) => 
+                <div key={index}>
+                  <AttributeName key={index}>
+                    {attribute.name}
+                  </AttributeName>
 
-                    {attribute.name !== 'Color' ? 
-                      attribute.items.map((item, index) => 
-                    // console.log(item, attribute, product)
-                      <Radio key={index}>
-                        <label htmlFor="radio">
-                          <AttributeValue
-                            id="radio" 
-                            key={index} 
-                            value={item.value}
-                            name={product.id}
-                            type="radio"
-                            disabled
-                            style={{backgroundColor: 
-                              product.chosenAttributes.value.map((value, index) => 
-                              product.chosenAttributes.id.map((id, index) =>
-                              value === item.value ? '#000': '#fff'
-
-                              // {product.chosenAttributes.id.map((id, index) => 
-                              //    id === item.id ? '#000': '#fff' )}
-                            ))}}
-                          /> 
-                          <span>{item.id}</span>
+                  {attribute.name !== 'Color' ? 
+                    attribute.items.map((item, index) => 
+                    <Radio key={index}>
+                      <label htmlFor="radio">
+                        <AttributeValue
+                          miniCart={false}
+                          id="radio" 
+                          key={index} 
+                          value={item.value}
+                          name={attribute.id && !product.productId}
+                          type="radio"
+                          disabled
+                          checked={product.chosenAttributes.find((chosen, index) => chosen.value === item.value)}
+                        /> 
+                        <span>{item.value}</span>
                         </label>
-                      </Radio>
-                      ) :             
-                      attribute.items.map((item, index) => 
-                      <RadioColor color={item.value}>
-                        <label htmlFor="radioColor">
-                          <AttributeColor 
-                            id="radioColor" 
-                            key={index} 
-                            value={item.value}
-                            name={attribute.name}
-                            type="radio"
-                            defaultChecked={product.chosenAttributes.value.map((value, index) => value === item.value)}
-                          /> 
-                        </label>
-                      </RadioColor>
-                      ) 
-                    }
-                  </div> 
-                )}  */}
-        
+                    </Radio>
+                    ):             
+                    attribute.items.map((item, index) => 
+                    <RadioColor key={index} color={item.value}>
+                      <label htmlFor="radioColor">
+                        <AttributeColor 
+                          id="radioColor" 
+                          key={index} 
+                          value={item.value}
+                          name={attribute.id && !product.productId}
+                          type="radio"
+                          disabled
+                          checked={product.chosenAttributes.find((chosen, index) => chosen.value === item.value)}
+                        /> 
+                      </label>
+                    </RadioColor>
+                    ) 
+                  }
+                </div> 
+              )} 
           </InfoColumn>
           <SummaryColumn>
-            <BoxQuantity onClick={() => 
-            console.log(product.chosenAttributes)}
-              // this.props.addProductToCart(
-              //   product.id, 
-              //   product.prices, 
-              //   product.allAttributes, 
-              //   product.chosenAttributes, 
-              //   product.name, 
-              //   product.brand)}
-            >+</BoxQuantity>
-            {product.quantity}
+            <BoxQuantity onClick={() => this.props.increaseProductQuantity(product.id)}>+</BoxQuantity>
+              {product.quantity}
             <BoxQuantity  onClick={() => this.props.decreaseProductQuantity(product.id)}>-</BoxQuantity>
           </SummaryColumn>
+ 
           <CarouselColumn>
-                <CarouselImage></CarouselImage>
+            <React.Fragment>
+              <Img src={product.gallery.length > 1 ? 
+                product.gallery[this.state.imageIndex] : 
+                product.gallery[0]}
+              />
+              {product.gallery.length > 1 &&
+                <CarouselArrows>
+                  <Left onClick={() => this.handleImageLeftClick(product)}>
+                    <BsChevronLeft/>
+                  </Left>
+                  <Right onClick={() => this.handleImageRightClick(product)}>
+                    <BsChevronRight/>
+                  </Right>
+                </CarouselArrows>
+              }
+            </React.Fragment>
           </CarouselColumn>
         </InfoRow>
-        </>
+      </React.Fragment>
     )}
-
-       </>      
-  }
-}
+  </React.Fragment>      
+}}
 
 const mapStateToProps = state => {
-  console.log(state)
   return {
-    categoryName: state.categoryReducer.categoryName,
     currencyLabel: state.currencyReducer.currencyLabel,
     cartItems: state.cartReducer.cartItems,
     totalItems: state.cartReducer.totalItems
@@ -186,7 +157,8 @@ const mapDispatchToProps = dispatch => {
         chosenAttributes,
         name, 
         brand)),
-    decreaseProductQuantity: (id) => dispatch(decreaseProductQuantity(id))
+    decreaseProductQuantity: (id) => dispatch(decreaseProductQuantity(id)),
+    increaseProductQuantity: (id) => dispatch(increaseProductQuantity(id))
   }
 }
 

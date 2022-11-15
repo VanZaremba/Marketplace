@@ -1,7 +1,7 @@
 import React, { Component } from "react"
 import CartSummary from "../../components/Cart/CartSummary/CartSummary";
 import CartAmount from "../../components/Cart/CartAmount/CartAmount";
-import { Container, Title } from "../../components/Cart/CartSummary/CartSummaryStyles";
+import { Container, Title } from "../../components/Cart/CartSummary/CartSummary.styles";
 
 class CartPage extends Component {
   render() {

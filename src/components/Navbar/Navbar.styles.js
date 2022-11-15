@@ -28,7 +28,7 @@ export const NavbarCategory = styled(Link)`
   font-weight: 400;
   font-size: 16px;
   line-height: 120%;
-  color: #1d1f22;
+  color: var(--textBody);
   cursor: pointer;
   width: 100px;
   height: 80px;
@@ -82,6 +82,7 @@ export const CurrencyContainer = styled.div`
   position: absolute;
   top: 65px;
   box-shadow: 0px 2px 35px rgba(168, 172, 176, 0.19);
+  background-color: white;
   z-index: 4;
 `;
 
@@ -153,5 +154,5 @@ export const NavBarLinkExtended = styled(Link)`
   text-decoration: none;
   margin: 1rem;
   text-transform: uppercase;
-  color: #1d1f22;
+  color: var(--textBody);
 `;

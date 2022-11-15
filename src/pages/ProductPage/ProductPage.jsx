@@ -3,9 +3,9 @@ import ProductDescription from '../../components/ProductDescription/ProductDescr
 
 class ProductPage extends Component {
   render() {
-    return <>
+    return <React.Fragment>
       <ProductDescription/>
-    </>
+    </React.Fragment>
 
   }
 }

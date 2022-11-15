@@ -9,7 +9,7 @@ import {
   CartOnHover,
   ProductInfo, 
   ImgContainer 
-} from "./ProducstStyles";
+} from "./Products.styles";
 import { BsCart2 } from'react-icons/bs';
 import { BiLoader } from'react-icons/bi';
 import { withRouter } from "react-router-dom";
@@ -25,6 +25,10 @@ const GET_PRODUCTS = gql`
         brand
         gallery
         inStock
+        attributes{
+          id
+          name
+        }
         prices {
           amount
           currency {
@@ -82,10 +86,10 @@ class Products extends Component {
                   <span>OUT OF STOCK</span>
                 </ImgOutOfStockContainer>
               }
-              {item.inStock &&
+              {item.inStock && item.attributes.length === 0 &&
                 <CartOnHover 
                   className="cart" 
-                  onClick={() => this.props.addProductToCart(item.id, item.prices, item.allAttributes, item.chosenAttributes, item.name, item.brand)}
+                  onClick={() => this.props.addProductToCart(item.id, item.prices, item.attributes, item.attributes, item.name, item.brand, item.gallery)}
                   isHovered={this.state.isHovered}
                 >
                   <BsCart2 />
@@ -119,12 +123,14 @@ const mapDispatchToProps = dispatch => {
       allAttributes, 
       chosenAttributes,
       name, 
-      brand) => dispatch(addProductToCart(id, 
+      brand,
+      gallery) => dispatch(addProductToCart(id, 
         prices, 
         allAttributes, 
         chosenAttributes,
         name, 
-        brand)),
+        brand,
+        gallery)),
   }
 }
 
