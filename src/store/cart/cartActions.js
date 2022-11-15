@@ -1,9 +1,8 @@
 import {
   ADD_PRODUCT_TO_CART,
-  REMOVE_PRODUCT_FROM_CART,
-  SET_PRODUCT_ATTRIBUTES,
   DECREASE_PRODUCT_QUANTITY,
   INCREASE_PRODUCT_QUANTITY,
+  CHECK_OUT_CART,
 } from "./cartTypes";
 
 export const addProductToCart = (
@@ -12,7 +11,8 @@ export const addProductToCart = (
   allAttributes,
   chosenAttributes,
   name,
-  brand
+  brand,
+  gallery
 ) => {
   return {
     type: ADD_PRODUCT_TO_CART,
@@ -23,6 +23,7 @@ export const addProductToCart = (
       chosenAttributes: chosenAttributes,
       name: name,
       brand: brand,
+      gallery: gallery,
     },
   };
 };
@@ -45,14 +46,9 @@ export const increaseProductQuantity = (id) => {
   };
 };
 
-export const setProductAttributes = (productID, id, value) => {
-  console.log(productID, id, value);
+export const checkOutCart = () => {
   return {
-    type: SET_PRODUCT_ATTRIBUTES,
-    payload: {
-      productID: productID,
-      id: id,
-      value: value,
-    },
+    type: CHECK_OUT_CART,
+    payload: null,
   };
 };

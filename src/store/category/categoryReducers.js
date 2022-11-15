@@ -7,7 +7,6 @@ const initialState = {
 const categoryReducer = (state = initialState, action) => {
   switch (action.type) {
     case SET_CATEGORY:
-      console.log(action, state);
       return {
         ...state,
         categoryName: action.payload,
